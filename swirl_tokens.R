@@ -15,15 +15,15 @@ token.replace <- function(y,x){
   return(x)
 }
 
-create.tokens <- function(token.str, output.to) { #token.str will be code to input, output.to will be the value to apply token.replace to
+create.tokens <- function(token.str) { #token.str will be code to input, output.to will be the value to apply token.replace to
   eval(parse(text = token.str))   #pulls the code out of the character string and executes it using magic
   a = ls.str(pattern = "V")       # creates a vector of tokens in the function environment
   x = list()                      #creates blank list
   for (i in 1:length(a)){
     x[i] = list(c(a[i], get(a[i]))) #This took forever to figure out.  Had to add a list into the list?
   }
-  z = token.replace(x, output.to) #takes the output of create.tokens and applys it to the desired output value
-  return(z)
+  #z = token.replace(x, output.to) #takes the output of create.tokens and applys it to the desired output value
+  return(x)
 }
 
 
@@ -31,9 +31,9 @@ create.tokens <- function(token.str, output.to) { #token.str will be code to inp
 # Test case, use create.tokens and token.replace to
 # update the output and answer strings
 ##########################################################
-tokens = "V1 = sample(1:10,1); V2 = V1 + sample(3:20,1)"
-output = "create a vector x that contains <V1> through <V2>"
-answer = "x = <V1>:<V2>"
+#tokens = "V1 = sample(1:10,1); V2 = V1 + sample(3:20,1)"
+#output = "create a vector x that contains <V1> through <V2>"
+#answer = "x = <V1>:<V2>"
 
 
 
