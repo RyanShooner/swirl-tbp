@@ -1,54 +1,59 @@
 ########################################################
-# Assignment:
-# (1) Complete the create.tokens function which takes a 
-# token string, evaluates the R code, and returns a list 
-# of tokens with names and values.
-# (2) Use the create.tokens function and the token.find
-# function to update the output and answer given below
+# Written by Kyle A. Marrotte
+# With tons of assistance by Dr. Garret M. Dancik
+# Released under a Creative Commons Attribution-ShareAlike 4.0 
+# International license, because education should always be free.
 ########################################################
 
-## return a list of tokens, similar to what token.find did previously
-token.replace <- function(y,x){
-  
+{file.lesson = "./lesson.yaml" #Test files
+file.template = "./template.yaml"} #Will later be replaced
+
+tokens.replace <- function(x,y){ #Old tokens.replace function, takes tokens.create and applies it to df
   for (i in 1:length(y)){
-    x = sub(paste0("<",y[[i]][1],">"), y[[i]][2], x)} #Not ideal.  Need to change y[[i]][2] to account for all possible codes, maybe?
+    x = lapply(x, function(x) sub(paste0("<",y[[i]][1],">"), y[[i]][2], x))
+    }  #lapply required to preserve data.frame
   return(x)
 }
 
-create.tokens <- function(.token.str) { #token.str will be code to input, output.to will be the value to apply token.replace to
+tokens.create <- function(.token.str) { #creates tokens based on code from 'token' class
   eval(parse(text = .token.str))   #pulls the code out of the character string and executes it using magic
   a = ls.str()       # creates a vector of tokens in the function environment
   x = list()                      #creates blank list
   for (i in 1:length(a)){
-    x[[i]] = c(a[i], get(a[i])) #This took forever to figure out.  Had to add a list into the list?
+    x[[i]] = c(a[i], get(a[i])) #fills list x with tokens and executed code
   }
   return(x)
 }
 
+newrow <- function(element){
+  temp <- data.frame(Class=NA, Token=NA, Output=NA, CorrectAnswer=NA,
+                     AnswerChoices=NA, AnswerTests=NA,
+                     Hint=NA, Figure=NA, FigureType=NA,
+                     VideoLink=NA, Script=NA)
+  
+  for(nm in names(element)){
+    # Only replace NA with value if value is not NULL, i.e. instructor
+    # provided a nonempty value
+    if(!is.null(element[[nm]])) {
+      temp[,nm] <- element[[nm]]
+    }
+  }
+  return(temp)
+}
 
-##########################################################
-# Test case, use create.tokens and token.replace to
-# update the output and answer strings
-##########################################################
-tokens = "V1 = sample(1:10,1); V2 = V1 + sample(3:20,1)"
-output = "create a vector x that contains <V1> through <V2>"
-answer = "x = <V2>:<V1>"
+parse_content.yaml <- function(file, e){
+  raw_yaml <- yaml.load_file(file)
+  temp <- lapply(raw_yaml[-1], newrow)
+  df <- NULL
+  for(row in temp){
+    df <- rbind(df, row)
+  }
+  tokens <- tokens.create(df$Token) #pulls token input from df and saves it as tokens
+  df <- tokens.replace(df, tokens) #applies tokens to the orignal data frame
+  #save(df, file = "yaml.RData")  #Optional, if you want an output file
+  meta <- raw_yaml[[1]]
+  
+  return(df)
+}
 
-
-
-
-####################################################################
-# Environment code is below (this is no longer needed)
-####################################################################
-
-#token.env = new.env()
-#ls() # listing of global environment
-#ls(envir = token.env) # listing of token environment
-
-#eval(parse(text = tokens), envir = token.env)
-#ls(envir = token.env) # listing of token environment
-
-# get vector of token names
-#ls(envir = token.env) # listing of token environment
-#get("V1", envir = token.env)
-
+df.template = parse_content.yaml(file.template) #shortcut to test everything more easily
