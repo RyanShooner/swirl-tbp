@@ -1,25 +1,63 @@
 - Class: meta
-  Course: Independent Study
-  Lesson: Dynamically creating a yaml file
-  Author: Sarah Maroon
+  Course: Kyle's Guide To R For Brand-Spankin New Noobies
+  Lesson: Creating a course in swiRl
+  Author: Kyle A. Marrotte
   Type: Standard
   Organization: Eastern Connecticut State University
-  Version: Draft
+  Version: 2.3.1
+
+- Class: text 
+  Output: In this lesson, we're going to learn how to create your very own courses within swiRl.  I've created this course to teach myself how to do the same, so in a way, it's like we're learning together!  What fun!
+
+- Class: text
+  Token: V1 = 12
+  Output: The number is now <V1>. This course is assuming that you've already installed the swirlify packages.  If you haven't, please quit the lesson and install them by visiting swirlstats.com/instructors and following the instructions.  Once you have, we can begin!
+
+
+- Class: cmd_question
+  Output: The first thing you're going to want to do is create a new lesson.  First, obviously, you're going to want to create your lesson.  You can do this by using the new_lesson function.  For the sake of simplicity, we're going to just call this 'My Simple Lesson', and the course 'My Simple Course'.  So, go ahead and type 'new_lesson("My Simple Lesson", "My Simple Course")' to get started!
+  CorrectAnswer: new_lesson("My Simple Lesson", "My Simple Course")
+  AnswerTests: omnitest(correctExpr='new_lesson("My Simple Lesson", "My Simple Course")')
+  Hint:  Simply type "new_lesson("My Simple Lesson", "My Simple Course")".  Without the quotations, of course.
+
+- Class: cmd_question
+  Output:  Hey!  Look back down here!  As you can see, you created a new YAML (Yet Another Markup Language) file, which is where you can write you own course!  Now, it's a good idea to make sure you're working on the right lesson.  Type get_lesson() to check!
+  CorrectAnswer: get_lesson()
+  AnswerTests: omnitest(correctExpr='get_lesson()')
+  Hint:  Come on man, we haven't even gotten to the hard stuff yet!  Just type get_lesson()
   
 - Class: text
-  Output: Testing the yaml template
+  Output:  Great job!  If for some reason you're NOT working on the right lesson, you can type set_lesson to find the correct file to work on.  It will open up the file explorer on your OS of choice, and allow you to pick the right one.  But, don't do that now, since you should be looking at the right lesson.
   
 - Class: cmd_question
-  Output: Create a vector named numbers that stores the numbers 16, 52, 114, and 140
-  CorrectAnswer: numbers <- c(16, 52, 114, 140)
-  AnswerTests: omnitest(correctExpr='numbers <- c(16, 52, 114, 140)')
+  Output: Now, if you haven't seen at it before, this would be a great time to take a look at the swiRl course repository, which is at https://github.com/swirldev/swirl_courses.  This is where all the swiRl courses you've been workin on are kept online!  If you're looking to create your own lessons, being able to see the YAML files of the other courses is a great resource.  You can open it in your web browser of choice by typing shell.exec("https://bit.ly/1QFVpvg")
+  CorrectAnswer: shell.exec("https://bit.ly/1QFVpvg")
+  AnswerTests: any_of_exprs('shell.exec("https://bit.ly/1QFVpvg")', 'shell.exec("https://github.com/swirldev/swirl_courses")')
+  Hint: Make sure you include the https, and that your case is correct.
 
+- Class: text
+  Output:  If you take a look inside some of those YAML files, you'll see some example code that will really help you figure out how siwRl lessons work.  Let's start by taking a look at some of the classes.  As we go along, feel free to add some to your YAML file and experiment!
+  
+- Class: text
+  Output:  "text is your most basic class.  As you might have guessed, it allows you to print whatever you would like to the screen!  When you write, keep in mind the format for classes is as follows:  -Class:, then the name of the class.  What follows will depend on the specfic class, but will almost always follow up with Output: on the next line, followed by what you would like to display."
+  
 - Class: cmd_question
-  Output: Add the numbers  46 and 82 together and store in a variable called add.
-  CorrectAnswer: add <- 46 + 82
-  AnswerTests: omnitest(correctExpr='add <- 46 + 82')
+  Output: "cmd_question is another class within swirl, and will most likely be your second-most frequently used class.  It allows you to ask the student a simple question, and input a short answer or command line function as a response.  Every time you've had to type something so far this module, (including now!), you were answering a cmd_question.  You also have to provide 'CorrectAnswer:' and 'AnswerTests:'.  'CorrectAnswer' exists so that if you type skip(), siwRl has a correct answer to give.  It also allows you to make absolutely sure that the correct input is being given, in case you need to use it again later on in the lesson.  AnswerTests, on the other hand, is the actual argument that determines if the given answer is right or not.  Most of the time, AnswerTests will use OmniTest, which we'll cover soon.  Anyway, to pass this cmd_question, you must provide The Answer to the Ultimate Question of Life, the Universe, and Everything."
+  CorrectAnswer: 42
+  AnswerTests: omnitest(correctExpr=42)
+  Hint:  If you can't solve this question, perhaps you should build a special computer to help you out.  Should only take you 7.5 million years...
 
-- Class: cmd_question
-  Output: Add the numbers  3 and 4 together and store in a variable called add.
-  CorrectAnswer: add <- 3+4 
-  AnswerTests: omnitest(correctExpr='add <- 3+4')
+- Class: mult_question
+  Output:  "mult_question, in case the name wasn't obvious enough, allows you to enter a multiple choice question.  In addition to the output, CorrectAnswer, and AnswerTests, you also need to include 'AnswerChoices:', which are the choices seperated by semicolons."
+  CorrectAnswer: I can't wait to get started!
+  AnswerChoices: I'd rather be playing video games; I can't wait to get started!; I'm going to go take a nap first
+  AnswerTests: omnitest(correctVal="I can't wait to get started!")
+  Hint:  Hey now!  If I can focus, so can you!
+  
+#- Class: cmd_question
+#  Output: "For the sake of completing the assignment, I am including a question about how to plot a graph.  However, as I could not figure out a way to incorperate this into the theme of the lesson by the deadline, it will be without context, and commented out.  Sorry =(  The question is:  What code would you enter to plot a graph of the European Stock Market?"
+#  CorrectAnswer: plot(EuStockMarkets)
+#  AnswerTests: omnitest(correctExpr='plot(EuStockMarkets)')
+  
+- Class: text
+  Output: "Great job!  Now that we've gone over some of the most basic classes, you're finished with part one of this lesson!  Whenever you're ready, jump right into part two, where we'll go over a more in-debth class (scripts!), and discuss how to test for answers with Omnitest!"

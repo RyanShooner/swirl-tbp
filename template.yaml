@@ -24,3 +24,9 @@
   Output: Add the numbers  <V1> and <V2> together and store in a variable called add.
   CorrectAnswer: <var> <- <V1>+<V2> 
   AnswerTests: omnitest(correctExpr='<var> <- <V1>+<V2>')
+  
+- Class: cmd_question
+  Token: V1 = sample(1:10,1); V2 = V1 + sample(1:5,1); var=sample(c('add', 'sum'),1)
+  Output: Add the numbers  <V1> and <V2> together and store in a variable called add.
+  CorrectAnswer: <var> <- <V1>+<V2> 
+  AnswerTests: omnitest(correctExpr='<var> <- <V1>+<V2>')
