@@ -1,8 +1,14 @@
-# swirl_templates
-This is an attempt to add consistant randomization to the testing criteria in swiRl.
+# swirl-tbp: template-based practice problems in swirl_
 
-Since that was a tad unclear and a bit of an oxymoron, the less sound-bytey description is that these functions are designed to find integer tokens within course files, and replace them with random integers within a provided range.  It will keep the same random integers throughout the entire course, and create new ones every time the course is loaded.
+This package allows for the addition of 'template-based' practice problems in swirl (http://swirlstats.com).
 
-These functions are created for an independent study course at Eastern Connecticut State University.  They are created under a Creative Commons Attribution-ShareAlike 4.0 International license, meaning they are free to use and modify or do whatever you want with them, so long as credit is given where due.  Oh, and as a personal note, I would appriciate if you would wait to do all that until the project is finished, which as of today (10/19/2015), it is not.  This readme will be updated when it is.
+A 'template-based' problem is a problem where variable names, values, and other aspects are randomly generated at run-time, in order to provide students with an endless supply of problems for learning and assessment of R programming and data analysis concepts.
 
-EDIT 12/6/2015:  This repo is now as finished as it is going to be.  It's going out of my hands and into the hands of Dr. Dancik, and his new independent study students next semester.  Good luck, guys!
+All files are available under a Creative Commons Attribution-ShareAlike 4.0 International license, meaning they are free to use and modify or do whatever you want with them, so long as credit is given where due.  
+
+This work has been completed with the help of the following students during independent study courses at Eastern Connecticut State University:
+ - Kyle Marotte
+ - Ryan Shooner
+
+Note from Kyle on 12/6/2015:  This repo is now as finished as it is going to be.  It's going out of my hands and into the hands of Dr. Dancik, and his new independent study students next semester.  Good luck, guys!
+
