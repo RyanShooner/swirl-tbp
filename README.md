@@ -1,4 +1,4 @@
-# swirl-tbp: template-based practice problems in swirl_
+# swirl-tbp: template-based practice problems in swirl
 
 This package allows for the addition of 'template-based' practice problems in swirl (http://swirlstats.com).
 
