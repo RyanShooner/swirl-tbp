@@ -44,6 +44,7 @@ parse_content.yaml <- function(file, e, ret.df = FALSE){
 
 ## generates and assigns values to tokens for a given row
 token.generate <- function(row, token.list){
+  tokens = NULL
   if(!is.na(row$Token)){                #If there's anything in the 'Token' row,
     tokens <- tokens.create(as.character(row$Token), token.list)  #create the tokens
     row <- tokens.replace(row, tokens)  #then replace the tokens
