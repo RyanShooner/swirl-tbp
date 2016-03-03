@@ -43,27 +43,44 @@ parse_content.yaml <- function(file, e, ret.df = FALSE){
 
 
 ## generates and assigns values to tokens for a given row
-token.generate <- function(row){
+token.generate <- function(row, token.list){
+  tokens = NULL
   if(!is.na(row$Token)){                #If there's anything in the 'Token' row,
-    tokens <- tokens.create(as.character(row$Token))  #create the tokens
+    tokens <- tokens.create(as.character(row$Token), token.list)  #create the tokens
     row <- tokens.replace(row, tokens)  #then replace the tokens
   }
-  return(row)
+  ans = list(row = row, token.list = tokens)
+  return(ans)
 }
 
 
 # creates tokens from .token.str which is valid R code
+# and uses tokens in the .token.list if specified
 # returns a list of token values
-# to do: limit to tokens with single values?
-tokens.create <- function(.token.str) { 
+tokens.create <- function(.token.str, .token.list) {
+
+  if (!is.null(.token.list)) {
+	#TO DO: create objects here
+    .n = length(.token.list)
+    for(.i in 1:.n) {
+      .na = names(.token.list)[.i]
+      assign(.na, .token.list[[.na]])
+    }
+  }
+
+
   #executes token code
-  eval(parse(text = .token.str))   
+  eval(parse(text = .token.str))  
   # creates a vector of tokens in the function environment
   .tokens = ls() 
   # creates list of (token,value) pairs
   .vals = lapply(1:length(.tokens), function(i,t) {get(t[i])}, 
 	t= .tokens)
   names(.vals) = .tokens
+
+  #TO DO: combine .vals with .token.list, so we have a list containing
+  # both old and new tokens, which is then returned
+
   return(.vals)
 }
 
@@ -275,6 +292,9 @@ resume.default <- function(e, ...){
     e$delta <- mergeLists(safeEval(e$expr, e), e$delta)
   }
   # Execute instructions until a return to the prompt is necessary
+  #GD: add token.list
+  print("resetting token list")
+  token.list = NULL
   while(!e$prompt){
     # If the lesson is complete, save progress, remove the current
     # lesson from e, and invoke the top level menu method.
@@ -336,10 +356,17 @@ resume.default <- function(e, ...){
       e$delta <- list()
       saveProgress(e)
       e$current.row <- e$les[e$row,]
-
+      cat("\n\ncurrent token list:")
+      print(token.list)
+      
       # GD: generate token values if necessary
-      e$current.row = token.generate(e$current.row) 
+      tt = token.generate(e$current.row, token.list) 
+      token.list = tt$token.list
+      e$current.row = tt$row
 
+      cat("\n\nupdated token list:")
+      print(token.list)
+      
       # Prepend the row's swirl class to its class attribute
       class(e$current.row) <- c(e$current.row[,"Class"], 
                                        class(e$current.row))
