@@ -66,7 +66,8 @@ tokens.create <- function(.token.str, .token.list) {
      for(.i in 1:.n) {
        .na = names(.token.list)[.i]
        assign(.na, .token.list[[.na]])
-  }
+     }
+   }
  
   #executes token code
   eval(parse(text = .token.str))   
