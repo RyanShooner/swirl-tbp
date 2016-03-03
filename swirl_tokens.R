@@ -60,7 +60,12 @@ token.generate <- function(row, token.list){
 tokens.create <- function(.token.str, .token.list) {
 
   if (!is.null(.token.list)) {
-	#TO DO: create objects here
+ 
+  #TO DO: create objects here
+     .n = length(.token.list)
+     for(.i in 1:.n) {
+       .na = names(.token.list)[.i]
+       assign(.na, .token.list[[.na]])
   }
  
   #executes token code
@@ -378,7 +383,7 @@ resume.default <- function(e, ...){
 
 swirl <- function(resume.class="default", ...){
 
-  token.list <-list(x = 3, y = 4)
+  token.list <- NULL
   # Creates an environment, e, defines a function, cb, and registers
   # cb as a callback with data argument, e. The callback retains a
   # reference to the environment in which it was created, environment(cb),
