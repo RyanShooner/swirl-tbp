@@ -287,7 +287,6 @@ resume.default <- function(e, ...){
   }
   # Execute instructions until a return to the prompt is necessary
   #GD: add token.list
-  token.list = NULL
   while(!e$prompt){
     # If the lesson is complete, save progress, remove the current
     # lesson from e, and invoke the top level menu method.
@@ -331,8 +330,6 @@ resume.default <- function(e, ...){
       }
     }
 
-   cat("==== ptr = ", e$iptr, "\n")
-
     # If we are ready for a new row, prepare it
     if(e$iptr == 1){      
       # Increment progress bar
@@ -352,7 +349,7 @@ resume.default <- function(e, ...){
 
       # GD: generate token values if necessary
       tt = token.generate(e$current.row, token.list) 
-      token.list = tt$token.list
+      token.list <<- tt$token.list
       e$current.row = tt$row
 
       # Prepend the row's swirl class to its class attribute
@@ -379,15 +376,59 @@ resume.default <- function(e, ...){
   return(TRUE)
 }
 
+swirl <- function(resume.class="default", ...){
+
+  token.list <-list(x = 3, y = 4)
+  # Creates an environment, e, defines a function, cb, and registers
+  # cb as a callback with data argument, e. The callback retains a
+  # reference to the environment in which it was created, environment(cb),
+  # hence that environment, which also contains e, persists as long
+  # as cb remains registered. Thus e can be used to store infomation
+  # between invocations of cb.
+  removeTaskCallback("mini")
+  # e lives here, in the environment created when swirl() is run
+  e <- new.env(globalenv())
+  # This dummy object of class resume.class "tricks" the S3 system
+  # into calling the proper resume method. We retain the "environment"
+  # class so that as.list(e) works.
+  class(e) <- c("environment", resume.class)
+  # The callback also lives in the environment created when swirl()
+  # is run and retains a reference to it. Because of this reference,
+  # the environment which contains both e and cb() persists as
+  # long as cb() remains registered.
+  cb <- function(expr, val, ok, vis, data=e){
+    # The following will modify the persistent e
+    e$expr <- expr
+    e$val <- val
+    e$ok <- ok
+    e$vis <- vis
+
+    cat("==== cb, token list === \n")
+    print(token.list) 
+    cat("\n\nin cb, now resume ==== \n\n")
+   
+ 
+    # The result of resume() will determine whether the callback
+    # remains active
+    return(resume(e, ...))
+  }
+  cat("\n\n== add task to callback ==\n\n")
+  addTaskCallback(cb, name="mini")
+  invisible()
+}
+
+
 
 
 # functions above need 'swirl' as their environment
 e=environment(getFromNamespace("parse_content.yaml", "swirl"))
 environment(parse_content.yaml) = e
 environment(resume.default) = e
+environment(swirl) = e
 
 assignInNamespace("parse_content.yaml", parse_content.yaml, "swirl") 
 assignInNamespace("resume.default", resume.default, "swirl") 
+assignInNamespace("swirl", swirl, "swirl") 
 
 
 
