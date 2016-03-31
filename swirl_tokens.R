@@ -9,14 +9,13 @@ library(swirl)
 # modified from swirl_2.2.21 to include Tokens
 parse_content.yaml <- function(file, e, ret.df = FALSE){
   cat("\n\nin parse_content...\n\n")
-  # GD: add Token to newrow
+  # GD: TO DO: add Repeat to newrow
   newrow <- function(element){
     temp <- data.frame(Class=NA, Token = NA, Output=NA, CorrectAnswer=NA,
                        AnswerChoices=NA, AnswerTests=NA,
                        Hint=NA, Figure=NA, FigureType=NA,
-                       VideoLink=NA, Script=NA)
+                       VideoLink=NA, Script=NA, Repeat=NA)
     for(nm in names(element)){
-      # Only replace NA with value if value is not NULL, i.e. instructor
       # provided a nonempty value
       if(!is.null(element[[nm]])) {
         temp[,nm] <- element[[nm]]
@@ -60,26 +59,22 @@ token.generate <- function(row, token.list){
 tokens.create <- function(.token.str, .token.list) {
 
   if (!is.null(.token.list)) {
-	#TO DO: create objects here
-    .n = length(.token.list)
-    for(.i in 1:.n) {
-      .na = names(.token.list)[.i]
-      assign(.na, .token.list[[.na]])
-    }
-  }
 
-
+     .n = length(.token.list)
+     for(.i in 1:.n) {
+       .na = names(.token.list)[.i]
+       assign(.na, .token.list[[.na]])
+     }
+   }
+ 
   #executes token code
-  eval(parse(text = .token.str))  
+  eval(parse(text = .token.str))   
   # creates a vector of tokens in the function environment
   .tokens = ls() 
   # creates list of (token,value) pairs
   .vals = lapply(1:length(.tokens), function(i,t) {get(t[i])}, 
 	t= .tokens)
   names(.vals) = .tokens
-
-  #TO DO: combine .vals with .token.list, so we have a list containing
-  # both old and new tokens, which is then returned
 
   return(.vals)
 }
@@ -292,9 +287,7 @@ resume.default <- function(e, ...){
     e$delta <- mergeLists(safeEval(e$expr, e), e$delta)
   }
   # Execute instructions until a return to the prompt is necessary
-  #GD: add token.list
-  print("resetting token list")
-  token.list = NULL
+  
   while(!e$prompt){
     # If the lesson is complete, save progress, remove the current
     # lesson from e, and invoke the top level menu method.
@@ -338,8 +331,6 @@ resume.default <- function(e, ...){
       }
     }
 
-   cat("==== ptr = ", e$iptr, "\n")
-
     # If we are ready for a new row, prepare it
     if(e$iptr == 1){      
       # Increment progress bar
@@ -356,17 +347,23 @@ resume.default <- function(e, ...){
       e$delta <- list()
       saveProgress(e)
       e$current.row <- e$les[e$row,]
-      cat("\n\ncurrent token list:")
-      print(token.list)
-      
+
       # GD: generate token values if necessary
       tt = token.generate(e$current.row, token.list) 
-      token.list = tt$token.list
+
+      cat("\n====print current row ==== \n")
+      print(e$current.row)
+      #save(e, file = "check.RData")
+      
+      token.list <<- tt$token.list
+      
+      #GD: TO DO: output the 'Repeat' value
       e$current.row = tt$row
 
-      cat("\n\nupdated token list:")
-      print(token.list)
+     cat("repeat = ", e$current.row$Repeat, "\n")
       
+
+
       # Prepend the row's swirl class to its class attribute
       class(e$current.row) <- c(e$current.row[,"Class"], 
                                        class(e$current.row))
@@ -391,15 +388,60 @@ resume.default <- function(e, ...){
   return(TRUE)
 }
 
+swirl <- function(resume.class="default", ...){
+
+  token.list <<- NULL
+  # Creates an environment, e, defines a function, cb, and registers
+  # cb as a callback with data argument, e. The callback retains a
+  # reference to the environment in which it was created, environment(cb),
+  # hence that environment, which also contains e, persists as long
+  # as cb remains registered. Thus e can be used to store infomation
+  # between invocations of cb.
+  removeTaskCallback("mini")
+  # e lives here, in the environment created when swirl() is run
+  e <- new.env(globalenv())
+  # This dummy object of class resume.class "tricks" the S3 system
+  # into calling the proper resume method. We retain the "environment"
+  # class so that as.list(e) works.
+  class(e) <- c("environment", resume.class)
+  # The callback also lives in the environment created when swirl()
+  # is run and retains a reference to it. Because of this reference,
+  # the environment which contains both e and cb() persists as
+  # long as cb() remains registered.
+  cb <- function(expr, val, ok, vis, data=e){
+    # The following will modify the persistent e
+    e$expr <- expr
+    e$val <- val
+    e$ok <- ok
+    e$vis <- vis
+
+    cat("==== cb, token list === \n")
+    print(token.list) 
+    cat("\n\nin cb, now resume ==== \n\n")
+   
+ 
+    # The result of resume() will determine whether the callback
+    # remains active
+    return(resume(e, ...))
+  }
+  
+  cat("\n\n== add task to callback ==\n\n")
+  addTaskCallback(cb, name="mini")
+  invisible()
+}
+
+
 
 
 # functions above need 'swirl' as their environment
 e=environment(getFromNamespace("parse_content.yaml", "swirl"))
 environment(parse_content.yaml) = e
 environment(resume.default) = e
+environment(swirl) = e
 
 assignInNamespace("parse_content.yaml", parse_content.yaml, "swirl") 
 assignInNamespace("resume.default", resume.default, "swirl") 
+assignInNamespace("swirl", swirl, "swirl") 
 
 
 
