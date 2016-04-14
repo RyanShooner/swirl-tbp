@@ -1,0 +1,79 @@
+- Class: meta
+  Course: RyanTest
+  Lesson: TestLesson
+  Author: Ryan Shooner
+  Type: Standard
+  Organization: 
+  Version: 
+
+
+- Class: cmd_question
+  Token: |
+   name = c("x", "y", "num", "val")
+   name = sample(name, 1) 
+   num1 = sample(1:10,1)
+   num2 = sample(1:10,1)
+   num3 = sample(1:10,1)
+   num4 = sample(1:10,1)
+   vector4 = c(num1, num2, num3, num4)
+   num = sample(3:4, 1) 
+   vector = sample(vector4, num)
+   vector= paste(vector, collapse = ', ')
+   vectorAnswer = paste0("c(", vector, ")")
+   if (num == 3) { output =  paste0("Create a vector named ", name, " containing the 3 numbers ",  vector) }
+   if (num == 4) { output =  paste0("Create a vector named ", name, " containing the 4 numbers ", vector) }
+  Output: <output>
+  CorrectAnswer: <name> <- <vectorAnswer>
+  AnswerTests: omnitest(correctExpr='<name> <- <vectorAnswer>')
+
+- Class: cmd_question
+  Token: |
+   name = c("x", "y", "num", "val")
+   name = sample(name, 1) 
+   num1 = sample(1:10,1)
+   num2 = sample(1:10,1)
+   num3 = sample(1:10,1)
+   num4 = sample(1:10,1)
+   vector4 = c(num1, num2, num3, num4)
+   num = sample(3:4, 1) 
+   vector = sample(vector4, num)
+   vector= paste(vector, collapse = ', ')
+   vectorAnswer = paste0("c(", vector, ")")
+  Output: Create a vector named "<name>" containing the <num> numbers <vector>
+  CorrectAnswer: <name> <- <vectorAnswer>
+  AnswerTests: omnitest(correctExpr='<name> <- <vectorAnswer>')
+  Hint: Create a vector named "<name>" containing the <num> numbers <vector> =====================  <name> <- <vectorAnswer>
+
+- Class: cmd_question
+  Repeat: 3
+  Token: |
+   x = sample(1:10,1)
+   y = sample (10:20,1)
+  Output: Write R code to create a vector named 'v' that contains the numbers <x> through <y>.
+  CorrectAnswer: v <- c(<x>:<y>)
+  AnswerTests: omnitest(correctExpr='v <- c(<x>:<y>)')
+
+- Class: cmd_question
+  Repeat: 3
+  Token: |
+   x = sample(1:10,1)
+   y = sample(1:10,1)
+  Output: Write R code to create a vector named 'v' that contains the numbers <x> and <y>.
+  CorrectAnswer: v <- c(<x>,<y>)
+  AnswerTests: omnitest(correctExpr='v <- c(<x>,<y>)')
+
+
+- Class: cmd_question
+  Token: |
+   name = c("x", "y", "num", "val")  
+   name = sample(name, 1)
+   num1 = sample(1:10,1)
+   num2 = sample(1:10,1)
+   num3 = sample(1:10,1) 
+   num4 = sample(1:10,1) 
+   vector4 = c(num1, num2, num3, num4); 
+   num = sample(3:4, 1); vector = sample(vector4, num)
+  Output: Create a vector named "<name>" containing the <num> numbers <vector>
+  CorrectAnswer: <name> <- c(<vector>)
+  AnswerTests: omnitest(correctExpr='<name> <- c(<vector>)')
+ 
