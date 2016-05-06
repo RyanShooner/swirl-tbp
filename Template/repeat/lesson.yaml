@@ -1,0 +1,20 @@
+- Class: meta
+  Course: Independent Study
+  Lesson: Dynamically creating a yaml file
+  Author: Sarah Maroon
+  Type: Standard
+  Organization: Eastern Connecticut State University
+  Version: Draft
+  
+- Class: text
+  Output: Testing the yaml template
+  
+- Class: cmd_question
+  NumTimes: 3
+  Token: V1 = sample(1:100,1); V2 = V1 + sample(1:5,1); var=sample(c('add', 'sum'),1)
+  Output: Add the numbers  <V1> and <V2> together and store in a variable called <var> 
+  CorrectAnswer: <var> <- <V1>+<V2> 
+  AnswerTests: omnitest(correctExpr='<var> <- <V1>+<V2>')
+ 
+- Class: text
+  Output: Awesome, you are done! 

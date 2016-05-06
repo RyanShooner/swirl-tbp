@@ -1,104 +1,3 @@
-#####################################################################
-# Authors: Kyle A. Marrotte and Dr. Dancik
-# Released under a Creative Commons Attribution-ShareAlike 4.0 
-# International license, because education should always be free.
-#####################################################################
-#library(yaml)     
-library(swirl)   
-
-# modified from swirl_2.2.21 to include Tokens
-parse_content.yaml <- function(file, e, ret.df = FALSE){
-  cat("\n\nin parse_content...\n\n")
-  # GD: add Token to newrow
-  newrow <- function(element){
-    temp <- data.frame(Class=NA, Token = NA, Output=NA, CorrectAnswer=NA,
-                       AnswerChoices=NA, AnswerTests=NA,
-                       Hint=NA, Figure=NA, FigureType=NA,
-                       VideoLink=NA, Script=NA)
-    for(nm in names(element)){
-      # Only replace NA with value if value is not NULL, i.e. instructor
-      # provided a nonempty value
-      if(!is.null(element[[nm]])) {
-        temp[,nm] <- element[[nm]]
-      }
-    }
-    temp
-  }
-  cat("loading file...\n")
-  raw_yaml <- yaml.load_file(file)
-  cat("done...\n")
-  temp <- lapply(raw_yaml[-1], newrow)
-  cat("done lapply\n")
-  df <- NULL
-  for(row in temp){
-    df <- rbind(df, row)
-  }
-  if (ret.df) return (df)
-  meta <- raw_yaml[[1]]
-  cat("===returning from parse_content.yaml===\n")
-  lesson(df, lesson_name=meta$Lesson, course_name=meta$Course,
-         author=meta$Author, type=meta$Type, organization=meta$Organization,
-         version=meta$Version, partner=meta$Partner)
-}
-
-
-## generates and assigns values to tokens for a given row
-token.generate <- function(row, token.list){
-  tokens = NULL
-  if(!is.na(row$Token)){                #If there's anything in the 'Token' row,
-    tokens <- tokens.create(as.character(row$Token), token.list)  #create the tokens
-    row <- tokens.replace(row, tokens)  #then replace the tokens
-  }
-  ans = list(row = row, token.list = tokens)
-  return(ans)
-}
-
-
-# creates tokens from .token.str which is valid R code
-# and uses tokens in the .token.list if specified
-# returns a list of token values
-tokens.create <- function(.token.str, .token.list) {
-
-  if (!is.null(.token.list)) {
- 
-  #TO DO: create objects here
-     .n = length(.token.list)
-     for(.i in 1:.n) {
-       .na = names(.token.list)[.i]
-       assign(.na, .token.list[[.na]])
-     }
-   }
- 
-  #executes token code
-  eval(parse(text = .token.str))   
-  # creates a vector of tokens in the function environment
-  .tokens = ls() 
-  # creates list of (token,value) pairs
-  .vals = lapply(1:length(.tokens), function(i,t) {get(t[i])}, 
-	t= .tokens)
-  names(.vals) = .tokens
-
-  #TO DO: combine .vals with .token.list, so we have a list containing
-  # both old and new tokens, which is then returned
-
-  return(.vals)
-}
-
-# for given row, replace each token <T> with its value
-# note: assumes singles values or may lead to errors or warnings
-tokens.replace <- function(row,tokens){
-  replace<-function(s,t.name,t.val) {
-	if (is.na(s)) return(NA)
-        gsub(paste0("<",t.name,">"),t.val, s)
-  }
-  for (n in names(tokens)){
-    row = lapply(row, replace,t.name = n,t.val = tokens[[n]])
-  }
-  row = data.frame(row, stringsAsFactors = FALSE) 
-  return(row)
-}
-
-
 # Default method resume implements a finite state (or virtual) machine. 
 # It runs a fixed "program" consisting of three "instructions" which in 
 # turn present information, capture a user's response, and test and retry 
@@ -351,11 +250,17 @@ resume.default <- function(e, ...){
       }
       e$delta <- list()
       saveProgress(e)
+
+     save(e, file = "e.rData")
+      cat("row = ", e$row, "\n")
+
       e$current.row <- e$les[e$row,]
+  
+      cat("repeat = ", e$current.row$NumTimes, "\n")
 
       # GD: generate token values if necessary
-      tt = token.generate(e$current.row, token.list) 
-      token.list <<- tt$token.list
+      tt = token.generate(e$current.row, e$token.list) 
+      e$token.list <- tt$token.list
       e$current.row = tt$row
 
       # Prepend the row's swirl class to its class attribute
@@ -363,7 +268,7 @@ resume.default <- function(e, ...){
                                        class(e$current.row))
     }
 
-    
+    save(e, file = "e.RData")
     # Execute the current instruction
     e$instr[[e$iptr]](e$current.row, e)
     # Check if a side effect, such as a sourced file, has changed the
@@ -408,11 +313,9 @@ swirl <- function(resume.class="default", ...){
     e$val <- val
     e$ok <- ok
     e$vis <- vis
-
     cat("==== cb, token list === \n")
-    print(token.list) 
+    print(e$token.list) 
     cat("\n\nin cb, now resume ==== \n\n")
-   
  
     # The result of resume() will determine whether the callback
     # remains active
