@@ -1,12 +1,16 @@
 ##########################################################
-# Added 'Token' and 'N' to newrow
+# Added followign to newrow function:
+#   'Token' - R code that will generate tokens
+#   'NumTimes' - the number of times to repeat the question
+#   'TimesRepated' - the number of times the question has
+#	already been repeated 
 ##########################################################
 
 parse_content.yaml <- function(file, e){
   cat("\n\nin parse_content...\n\n")
   # GD: add Token to newrow
   newrow <- function(element){
-    temp <- data.frame(Class=NA, NumTimes = 1,Token = NA, Output=NA, 
+    temp <- data.frame(Class=NA, NumTimes = 1, TimesRepeated = 0,Token = NA, Output=NA, 
 		       CorrectAnswer=NA, AnswerChoices=NA, AnswerTests=NA,
                        Hint=NA, Figure=NA, FigureType=NA,
                        VideoLink=NA, Script=NA)

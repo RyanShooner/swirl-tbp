@@ -1,3 +1,9 @@
+
+# allows user to repeat the previous question
+rpt <- function(){
+  invisible()
+}
+
 # Default method resume implements a finite state (or virtual) machine. 
 # It runs a fixed "program" consisting of three "instructions" which in 
 # turn present information, capture a user's response, and test and retry 
@@ -68,7 +74,26 @@ resume.default <- function(e, ...){
     swirl_out("I just reset the script to its original state. If it doesn't refresh immediately, you may need to click on it.", 
               skip_after = TRUE)
   }
-  
+ 
+  # GD: The user repeat the previous question
+  if (uses_func("rpt")(e$expr)[[1]]) {
+     e$playing <- FALSE
+     e$iptr <- 1
+
+     # if current question has not been repeated yet, then go to previous question 
+     # this is not the case
+     num = as.integer(e$les[e$row,]$TimesRepeated)
+     if (num == 0) { 
+     	e$row <- e$row - 1
+     }
+	
+     # update TimesRepeated counter in all cases 
+     num = as.integer(e$les[e$row,]$TimesRepeated)
+     num = num - 1
+     e$les[e$row,]$TimesRepeated = num
+     swirl_out("Repeating the previous question.", skip_after = TRUE)
+  } 
+ 
   # The user wants to submit their R script
   if(uses_func("submit")(e$expr)[[1]]){
     e$playing <- FALSE
@@ -251,8 +276,7 @@ resume.default <- function(e, ...){
       e$delta <- list()
       saveProgress(e)
 
-     save(e, file = "e.rData")
-      cat("row = ", e$row, "\n")
+      cat("START ROW #: ", e$row, "\n")
 
       e$current.row <- e$les[e$row,]
   
@@ -325,19 +349,5 @@ swirl <- function(resume.class="default", ...){
   addTaskCallback(cb, name="mini")
   invisible()
 }
-
-
-
-
-# functions above need 'swirl' as their environment
-e=environment(getFromNamespace("parse_content.yaml", "swirl"))
-environment(parse_content.yaml) = e
-environment(resume.default) = e
-environment(swirl) = e
-
-assignInNamespace("parse_content.yaml", parse_content.yaml, "swirl") 
-assignInNamespace("resume.default", resume.default, "swirl") 
-assignInNamespace("swirl", swirl, "swirl") 
-
 
 

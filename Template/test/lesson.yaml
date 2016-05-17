@@ -8,7 +8,10 @@
   
 - Class: text
   Output: Testing the yaml template
-  
+ 
+- Class: text
+  Output: testing again
+ 
 - Class: cmd_question
   Token: V1 = sample(1:100,1); V2 = V1 + sample(1:5,1); var=sample(c('add', 'sum'),1)
   Output: Add the numbers  <V1> and <V2> together and store in a variable called <var> 

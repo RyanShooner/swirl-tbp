@@ -31,12 +31,12 @@ testResponse.default <- function(current.row, e){
     swirl_out(praise())
     e$iptr <- 1
 
-    #update NumTimes for this question and move to next row if we are done
-    num = as.integer(e$current.row$NumTimes)
-    num = num - 1
-    e$les[e$row,]$NumTimes = num
+    #update TimesRepeated for this question and move to next row if we are done
+    num = as.integer(e$current.row$TimesRepeated)
+    num = num + 1
+    e$les[e$row,]$TimesRepeated = num
     cat("upate num to ", num, "\n")
-    if (num == 0) {
+    if (num >= e$current.row$NumTimes) {
       e$row <- 1 + e$row
     }
     # Reset attempts counter, since correct

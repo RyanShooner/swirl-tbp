@@ -10,11 +10,17 @@
   Output: Testing the yaml template
   
 - Class: cmd_question
-  NumTimes: 3
-  Token: V1 = sample(1:100,1); V2 = V1 + sample(1:5,1); var=sample(c('add', 'sum'),1)
-  Output: Add the numbers  <V1> and <V2> together and store in a variable called <var> 
-  CorrectAnswer: <var> <- <V1>+<V2> 
-  AnswerTests: omnitest(correctExpr='<var> <- <V1>+<V2>')
- 
-- Class: text
-  Output: Awesome, you are done! 
+  NumTimes: 2
+  Token: |
+          var = sample(c("x", "y","num","age","v"),1)
+          V1 = sample(1:100,4)
+          n = sample(3:4,1)
+          numbers = paste0(V1[1:n], collapse = ",")   
+  Output: Create a vector named <var> that stores the numbers <numbers> 
+  CorrectAnswer: <var> <- c(<numbers>) 
+  AnswerTests: omnitest(correctExpr='<var> <- c(<numbers>)')
+
+- Class: cmd_question
+  Output: Print out the vector <var> by typing it 
+  CorrectAnswer: <var> 
+  AnswerTests: omnitest(correctExpr='<var>')
