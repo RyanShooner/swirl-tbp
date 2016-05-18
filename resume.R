@@ -17,7 +17,7 @@ rpt <- function(){
 
 resume.default <- function(e, ...){
 
-  cat("\n\n==== resuming ====\n\n")
+  swirl_cat("\n\n==== resuming ====\n\n")
   # Check that if running in test mode, all necessary args are specified
   if(is(e, "test")) {
     # Capture ... args
@@ -47,7 +47,9 @@ resume.default <- function(e, ...){
       e$test_to <- targs$to
     }
   }
-  
+ 
+  swirl_cat("\n\nTrapping special functions\n\n")
+ 
   esc_flag <- TRUE
   on.exit(if(esc_flag)swirl_out("Leaving swirl now. Type swirl() to resume.", skip_after=TRUE))
   # Trap special functions
@@ -212,12 +214,14 @@ resume.default <- function(e, ...){
        !uses_func("swirlify")(e$expr)[[1]] &&
        !uses_func("testit")(e$expr)[[1]] &&
        !uses_func("nxt")(e$expr)[[1]] &&
+       !uses_func("rpt")(e$expr)[[1]] && 
        isTRUE(customTests$AUTO_DETECT_NEWVAR)) {
     e$delta <- mergeLists(safeEval(e$expr, e), e$delta)
   }
   # Execute instructions until a return to the prompt is necessary
   #GD: add token.list
   while(!e$prompt){
+    swirl_cat("\n\nBegin prompt loop\n\n")
     # If the lesson is complete, save progress, remove the current
     # lesson from e, and invoke the top level menu method.
     # Below, min() ignores e$test_to if it is NULL (i.e. not in 'test' mode)
@@ -258,7 +262,7 @@ resume.default <- function(e, ...){
         esc_flag <- FALSE # to supress double notification
         return(FALSE)
       }
-    }
+    } # end if lesson is complete
 
     # If we are ready for a new row, prepare it
     if(e$iptr == 1){      
@@ -276,11 +280,11 @@ resume.default <- function(e, ...){
       e$delta <- list()
       saveProgress(e)
 
-      cat("START ROW #: ", e$row, "\n")
+      swirl_cat("START ROW #: ", e$row, "\n")
 
       e$current.row <- e$les[e$row,]
   
-      cat("repeat = ", e$current.row$NumTimes, "\n")
+      swirl_cat("repeat = ", e$current.row$NumTimes, "\n")
 
       # GD: generate token values if necessary
       tt = token.generate(e$current.row, e$token.list) 
@@ -292,9 +296,23 @@ resume.default <- function(e, ...){
                                        class(e$current.row))
     }
 
-    save(e, file = "e.RData")
+   save(e, file = "e.RData")
     # Execute the current instruction
-    e$instr[[e$iptr]](e$current.row, e)
+    a = e$instr[[e$iptr]](e$current.row, e)
+   
+    # allow for repeat even the current question is a text questionn
+    if (e$current.row$Class == "text" && a == "rpt()") {
+  	e$playing <- FALSE
+     	e$iptr <- 1
+        e$row <- e$row - 2
+        if (e$row < 1) e$row = 1
+
+     # update TimesRepeated counter in all cases 
+     num = as.integer(e$les[e$row,]$TimesRepeated)
+     num = num - 1
+     e$les[e$row,]$TimesRepeated = num
+    } 
+
     # Check if a side effect, such as a sourced file, has changed the
     # values of any variables in the official list. If so, add them
     # to the list of changed variables.
@@ -337,15 +355,15 @@ swirl <- function(resume.class="default", ...){
     e$val <- val
     e$ok <- ok
     e$vis <- vis
-    cat("==== cb, token list === \n")
-    print(e$token.list) 
-    cat("\n\nin cb, now resume ==== \n\n")
+    swirl_cat("==== cb, token list === \n")
+    #print(e$token.list) 
+    swirl_cat("\n\nin cb, now resume ==== \n\n")
  
     # The result of resume() will determine whether the callback
     # remains active
     return(resume(e, ...))
   }
-  cat("\n\n== add task to callback ==\n\n")
+  swirl_cat("\n\n== add task to callback ==\n\n")
   addTaskCallback(cb, name="mini")
   invisible()
 }

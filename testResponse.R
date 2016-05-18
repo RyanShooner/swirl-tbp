@@ -8,13 +8,13 @@
 
 
 testResponse.default <- function(current.row, e){
-  cat("in testResponse...\n")
+  swirl_cat("in testResponse...\n")
   # Increment attempts counter
   e$attempts <- 1 + e$attempts
   # Get answer tests
   tests <- current.row[,"AnswerTests"]
 
-  cat("Answer Tests = ", tests, "\n")
+  swirl_cat("Answer Tests = ", tests, "\n")
 
   if(is.na(tests) || tests == ""){
     results <- is(e, "dev")
@@ -23,7 +23,7 @@ testResponse.default <- function(current.row, e){
     }
   } else {
     tests <- str_trim(unlist(strsplit(tests,";")))
-    cat("after trim, tests = ", tests, "\n")
+    swirl_cat("after trim, tests = ", tests, "\n")
     results <- lapply(tests, function(keyphrase){testMe(keyphrase,e)})
   }
   correct <- !(FALSE %in% unlist(results))
@@ -35,7 +35,7 @@ testResponse.default <- function(current.row, e){
     num = as.integer(e$current.row$TimesRepeated)
     num = num + 1
     e$les[e$row,]$TimesRepeated = num
-    cat("upate num to ", num, "\n")
+    swirl_cat("upate num to ", num, "\n")
     if (num >= e$current.row$NumTimes) {
       e$row <- 1 + e$row
     }
@@ -69,13 +69,13 @@ testResponse.default <- function(current.row, e){
 testMe <- function(keyphrase, e){
   # patch to accommodate old-style tests
 
-  cat("testing: ", keyphrase, "\n")
+  swirl_cat("atesting: ", keyphrase, "\n")
   oldcourse <- attr(e$les, "course_name") %in%
     c("Data Analysis", "Mathematical Biostatistics Boot Camp",
       "Open Intro")
 
   if(oldcourse){
-	cat("old course...\n")
+	swirl_cat("old course...\n")
     # Use old test syntax
     # Add a new class attribute to the keyphrase using
     # the substring left of its first "=".
@@ -83,7 +83,7 @@ testMe <- function(keyphrase, e){
                                   strsplit(keyphrase, "=")[[1]][1])
     return(runTest(keyphrase, e))
   } else {
-    cat("eval...\n")
+    swirl_cat("eval...\n")
     save(keyphrase, file = "key.RData")
     # Use new test syntax
     return(eval(parse(text=keyphrase)))

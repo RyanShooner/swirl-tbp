@@ -7,7 +7,7 @@
 ##########################################################
 
 parse_content.yaml <- function(file, e){
-  cat("\n\nin parse_content...\n\n")
+  swirl_cat("\n\nin parse_content...\n\n")
   # GD: add Token to newrow
   newrow <- function(element){
     temp <- data.frame(Class=NA, NumTimes = 1, TimesRepeated = 0,Token = NA, Output=NA, 
@@ -23,18 +23,18 @@ parse_content.yaml <- function(file, e){
     }
     temp
   }
-  cat("loading file...\n")
+  swirl_cat("loading file...\n")
   raw_yaml <- yaml.load_file(file)
-  cat("done...\n")
+  swirl_cat("done...\n")
   temp <- lapply(raw_yaml[-1], newrow)
-  cat("done lapply\n")
+  swirl_cat("done lapply\n")
   df <- NULL
   for(row in temp){
     df <- rbind(df, row)
   }
   save(df, file = "df.RData")
   meta <- raw_yaml[[1]]
-  cat("===returning from parse_content.yaml===\n")
+  swirl_cat("===returning from parse_content.yaml===\n")
   lesson(df, lesson_name=meta$Lesson, course_name=meta$Course,
          author=meta$Author, type=meta$Type, organization=meta$Organization,
          version=meta$Version, partner=meta$Partner)
