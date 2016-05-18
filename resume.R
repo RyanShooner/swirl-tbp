@@ -98,13 +98,18 @@ resume.default <- function(e, ...){
  
   # The user wants to submit their R script
   if(uses_func("submit")(e$expr)[[1]]){
+
     e$playing <- FALSE
-    # Get contents from user's submitted script
-    e$script_contents <- readLines(e$script_temp_path, warn = FALSE)
-    # Save expr to e
-    e$expr <- try(parse(text = e$script_contents), silent = TRUE)
-    swirl_out("Sourcing your script...", skip_after = TRUE)
-    try(source(e$script_temp_path))
+
+    # if script question, then source the script
+    if (e$current.row$Class=="script") { 
+      # Get contents from user's submitted script
+      e$script_contents <- readLines(e$script_temp_path, warn = FALSE)
+      # Save expr to e
+      e$expr <- try(parse(text = e$script_contents), silent = TRUE)
+      swirl_out("Sourcing your script...", skip_after = TRUE)
+      try(source(e$script_temp_path))
+    }
   }
   
   if(uses_func("play")(e$expr)[[1]]){
@@ -296,7 +301,6 @@ resume.default <- function(e, ...){
                                        class(e$current.row))
     }
 
-   save(e, file = "e.RData")
     # Execute the current instruction
     a = e$instr[[e$iptr]](e$current.row, e)
    

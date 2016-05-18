@@ -27,3 +27,16 @@ assignInNamespace("testResponse.default", testResponse.default, "swirl")
 assignInNamespace("waitUser.default", waitUser.default, "swirl") 
 assignInNamespace("swirl", swirl, "swirl") 
 
+## would go in answerTests2.R
+var_has_value <- function(val, var_name) {
+  var_name <- str_trim(var_name)
+  if(exists(var_name, globalenv())){
+    var <- get(var_name, globalenv())
+    return (identical(val, var))
+  } else {
+    swirl_out(paste0("Error: ", var_name, " does not exist. Make sure to store your answer in ", var_name, "."))
+    return(FALSE)
+  }
+}
+
+environment(var_has_value) = e

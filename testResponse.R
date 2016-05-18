@@ -1,3 +1,19 @@
+var_is_a <- function(class, var_name) {
+  e <- get("e", parent.frame())
+  class <-  str_trim(class)
+  var_name <- str_trim(var_name)
+  if(exists(var_name, globalenv())){
+    val <- get(var_name, globalenv())
+    label <- val
+    results <- expectThat(val, is_a(class), label=label)
+    if(is(e,"dev") && !results$passed)swirl_out(results$message)
+    return(results$passed)
+  } else {
+    if(is(e,"dev"))swirl_out(paste(var_name, "does not exist."))
+    return(FALSE)
+  }
+}
+
 # original in instructionSet.R
 # GD: modified to allow for repeating
 
@@ -84,7 +100,6 @@ testMe <- function(keyphrase, e){
     return(runTest(keyphrase, e))
   } else {
     swirl_cat("eval...\n")
-    save(keyphrase, file = "key.RData")
     # Use new test syntax
     return(eval(parse(text=keyphrase)))
   }

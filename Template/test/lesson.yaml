@@ -9,8 +9,11 @@
 - Class: text
   Output: Testing the yaml template
  
-- Class: text
-  Output: testing again
+- Class: multi_cmd_question
+  Token: x = sample(1:10)
+  Output: Assign <x> to x. When you are finished, type submit() and your answer 
+          will be evaluated.
+  AnswerTests: var_has_value(<x>, "x")
  
 - Class: cmd_question
   Token: V1 = sample(1:100,1); V2 = V1 + sample(1:5,1); var=sample(c('add', 'sum'),1)
