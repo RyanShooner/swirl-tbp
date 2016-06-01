@@ -27,7 +27,7 @@ Lessons with template-based practice problems are created in the same way as reg
   AnswerTests: omnitest(correctExpr='x <- c(<num1>,<num2>)')
 ```
 
-The main addition is that a 'Token' line is specified which uses *R* code to dynamically generate tokens (values). Elsewhere in the YAML file, these tokens are surrounded by angle brackets (e.g., <num1>) and will be replaced by their values when the lesson is run. 
+The main addition is that a 'Token' line is specified which uses *R* code to dynamically generate tokens (values). Elsewhere in the YAML file, these tokens are surrounded by angle brackets (e.g., `<num1>`) and will be replaced by their values when the lesson is run. 
 
 For example, the above segment generates a question of the form 'Create a vector named *x* that holds the values *num1* and *num2*', where *num1* will be a random value between 1 and 10 and num2 a random value between 11 and 20. 
 
