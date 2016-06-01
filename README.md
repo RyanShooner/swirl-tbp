@@ -6,11 +6,10 @@ The *swirl-tbp* extension introduces *template-based practice* problems to the *
 1. Install the *swirl* package from http://swirlstats.com
 2. Download the *swirl-tbp* files, either by cloning the repository from github, or by downloading and extracting the zip file https://github.com/gdancik/swirl-tbp/archive/master.zip
 3.  Source the *R* files, for example by typing the following from within *R*, where '/path' is the path to the *swirl-tbp* files:
-
-	`setwd("/path")`
-
+	
+	`setwd("/path")`<br>
 	`source("swirl-tbp.R")`
- 
+
 4. The  *swirl* package has now been extended to allow for template-based practice problems. To begin *swirl*, type the following from within *R*:
 
 	`swirl()`
