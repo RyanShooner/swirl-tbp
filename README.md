@@ -11,9 +11,9 @@ The *swirl-tbp* extension introduces *template-based practice* problems to the *
 
 	`source("swirl-tbp.R")`
  
-4. The  *swirl* package has now been extended to allow for template-based practice problems. To begin *swirl*, type the following:
+4. The  *swirl* package has now been extended to allow for template-based practice problems. To begin *swirl*, type the following from within *R*:
 
-	`library(swirl)`
+	`swirl()`
 5. For students, lessons are run in the same fashion as standard *swirl* lessons. However, at any time the student can type *rpt()* to repeat the previous question (with different dynamic values), if desired. 
  
 ## Creating lessons  
