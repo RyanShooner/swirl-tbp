@@ -27,14 +27,19 @@ assignInNamespace("testResponse.default", testResponse.default, "swirl")
 assignInNamespace("waitUser.default", waitUser.default, "swirl") 
 assignInNamespace("swirl", swirl, "swirl") 
 
-## would go in answerTests2.R
-var_has_value <- function(val, var_name) {
-  var_name <- str_trim(var_name)
-  if(exists(var_name, globalenv())){
-    var <- get(var_name, globalenv())
-    return (identical(val, var))
+# Returns TRUE if the variable 'var' has the value 'val' with an error
+# tolerance of epsilon. Error tolerance is needed to check some calculations. For example
+# identical(X,Y) returns FALSE for X = 1-pnorm(3) and Y = pnorm(3, lower.tail = FALSE)
+# since a user could use either, an error tolerance (e.g., eps = 1e-10) is needed
+# Note that the 'var' should be the name of a variable in quotes
+# do we want to add this to answerTests2.R of swirl package?
+var_has_value <- function(var, val, eps = 0) {
+  var <- str_trim(var)
+  if(exists(var, globalenv())){
+    var <- get(var, globalenv())
+    return (identical(abs(val-var)<=eps, TRUE))
   } else {
-    swirl_out(paste0("Error: ", var_name, " does not exist. Make sure to store your answer in ", var_name, "."))
+    swirl_out(paste0("Error: ", var, " does not exist. Make sure to store your answer in ", var, "."))
     return(FALSE)
   }
 }
