@@ -14,7 +14,7 @@ The *swirl-tbp* extension introduces *template-based practice* problems to the *
 5. For students, lessons are run in the same fashion as standard *swirl* lessons. However, at any time the student can type *rpt()* to repeat the previous question (with different dynamic values), if desired. 
  
 ## Creating lessons  
-Lessons with template-based practice problems are created in the same way as regular *swirl* lessons, but *tokens* are used to store dynamic *R* objects and values, and questions can be repeated multiple times. This is best illustrated by an example block from the YAML file: 
+Lessons with template-based practice problems are created in the same way as regular *swirl* lessons, but *tokens* are used to store dynamic *R* objects and values, and questions can be repeated multiple times. This is best illustrated by looking at an example block from the YAML file: 
 
 ```
 - Class: cmd_question
