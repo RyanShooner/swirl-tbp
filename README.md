@@ -31,7 +31,7 @@ Lessons with template-based practice problems are created in the same way as reg
 
 The main addition is that a 'Token' line is specified which uses *R* code to dynamically generate tokens (values). Elsewhere in the YAML file, these tokens are surrounded by angle brackets (e.g., `<num1>`) and will be replaced by their values when the lesson is run. 
 
-For example, the above segment generates a question of the form 'Create a vector named *values* that holds the values *num1* and *num2*', where *num1* will be a random integer between 1 and 10 and num2 a random integer between 11 and 20. 
+For example, the above segment generates a question of the form 'Create a vector named *values* that holds the values *num1* and *num2*', where *num1* will be a random integer between 1 and 10 and *num2* a random integer between 11 and 20. 
 
 Note that in the 'Token' line above, the vertical line (|) is necessary to indicate that the *R* code spans multiple lines. Each line must begin with a number of blank spaces, as tabs are not allowed in YAML files. Alternatively, the *R* code can be specified on a single line with statements separated by semi-colons. 
 
