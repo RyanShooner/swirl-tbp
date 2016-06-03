@@ -40,16 +40,20 @@ tokens.create <- function(.token.str, .token.list) {
 }
 
 ##################################################################
-# for given row, replace each token <T> with its value
-# note: currently only 1st value of a token object is used
+# For given row, replace each token <T> with its value
+# Note: only some token types are valid (see code below), and 
+#  vectors/matrix values are formatted to be comma-separated   
 ##################################################################
 tokens.replace <- function(row,tokens){
   replace<-function(s,t.name,t.val) {
 	if (is.na(s)) return(NA)
         gsub(paste0("<",t.name,">"),t.val[1], s)
   }
-  for (n in names(tokens)){
-    row = lapply(row, replace,t.name = n,t.val = tokens[[n]])
+
+  valid = c("logical", "integer", "double", "character")
+  token.names = names(tokens)[which(sapply(tokens, typeof) %in% valid)]
+  for (n in token.names){
+    row = lapply(row, replace,t.name = n,t.val = paste0(tokens[[n]],collapse = ","))
   }
   row = data.frame(row, stringsAsFactors = FALSE) 
   return(row)
