@@ -1,10 +1,11 @@
-##########################################################
+######################################################################
 # Added followign to newrow function:
 #   'Token' - R code that will generate tokens
 #   'NumTimes' - the number of times to repeat the question
 #   'TimesRepated' - the number of times the question has
 #	already been repeated 
-##########################################################
+#   'HintFunction' - the name of a function used to generate hints
+######################################################################
 
 parse_content.yaml <- function(file, e){
   swirl_cat("\n\nin parse_content...\n\n")
@@ -13,7 +14,7 @@ parse_content.yaml <- function(file, e){
     temp <- data.frame(Class=NA, NumTimes = 1, TimesRepeated = 0,Token = NA, Output=NA, 
 		       CorrectAnswer=NA, AnswerChoices=NA, AnswerTests=NA,
                        Hint=NA, Figure=NA, FigureType=NA,
-                       VideoLink=NA, Script=NA)
+                       VideoLink=NA, Script=NA, HintFunction = NA)
     for(nm in names(element)){
       # Only replace NA with value if value is not NULL, i.e. instructor
       # provided a nonempty value
@@ -32,7 +33,6 @@ parse_content.yaml <- function(file, e){
   for(row in temp){
     df <- rbind(df, row)
   }
-  save(df, file = "df.RData")
   meta <- raw_yaml[[1]]
   swirl_cat("===returning from parse_content.yaml===\n")
   lesson(df, lesson_name=meta$Lesson, course_name=meta$Course,

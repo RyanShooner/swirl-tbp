@@ -303,7 +303,9 @@ resume.default <- function(e, ...){
 
     # Execute the current instruction
     a = e$instr[[e$iptr]](e$current.row, e)
-   
+  
+    save(e, file = "e.RData")
+ 
     # allow for repeat even the current question is a text questionn
     if (e$current.row$Class == "text" && a == "rpt()") {
   	e$playing <- FALSE

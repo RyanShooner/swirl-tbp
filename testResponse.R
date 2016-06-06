@@ -25,6 +25,7 @@ var_is_a <- function(class, var_name) {
 
 testResponse.default <- function(current.row, e){
   swirl_cat("in testResponse...\n")
+
   # Increment attempts counter
   e$attempts <- 1 + e$attempts
   # Get answer tests
@@ -69,12 +70,19 @@ testResponse.default <- function(current.row, e){
       mes <- paste(mes, "Or, type info() for more options.")
     }
     swirl_out(mes)
+  
+    # get hint, possibly using hint function 
     temp <- current.row[,"Hint"]
+    if (!is.na(e$current.row$HintFunction)) { 
+         hf = get(e$current.row$HintFunction)
+	 temp <- hf()
+    }
+    
     # Suppress extra space if multiple choice
     is_mult <- is(e$current.row, "mult_question")
     # If hint is specified, print it. Otherwise, just skip a line.
     if (!is.na(temp)) {
-      swirl_out(current.row[,"Hint"], skip_after=!is_mult)
+      swirl_out(temp, skip_after=!is_mult)
     } else {
       message()
     }

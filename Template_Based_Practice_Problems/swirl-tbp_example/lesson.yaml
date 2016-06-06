@@ -17,6 +17,7 @@
   Output: Create a vector named 'values' that holds the values <num1> and <num2>.
   CorrectAnswer: values <- c(<num1>,<num2>)
   AnswerTests: omnitest(correctExpr='values <- c(<num1>,<num2>)')
+  HintFunction: createVectorHint
 
 - Class: cmd_question
   Token: |
