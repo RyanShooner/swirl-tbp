@@ -2,12 +2,12 @@
 token.generate <- function(row, token.list){
   tokens = NULL 
   if(!is.na(row$Token)){                #If there's anything in the 'Token' row,
-    tokens <- tokens.create(as.character(row$Token), token.list)  #create the tokens
-    row <- tokens.replace(row, tokens)  #then replace the tokens
+    token.list <- tokens.create(as.character(row$Token), token.list)  #create the tokens
+    row <- tokens.replace(row, token.list)  #then replace the tokens
   } else if (!is.null(token.list)){	# if there's anything in the token.list	
     row <-tokens.replace(row, token.list) # then replace the tokens
   }
-  ans = list(row = row, token.list = tokens)
+  ans = list(row = row, token.list = token.list)
   return(ans)
 }
 
