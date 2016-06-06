@@ -27,6 +27,7 @@ Lessons with template-based practice problems are created in the same way as reg
   Output: Create a vector named 'values' that holds the values <num1> and <num2>.
   CorrectAnswer: values <- c(<num1>,<num2>)
   AnswerTests: omnitest(correctExpr='values <- c(<num1>,<num2>)')
+  HintFunction: createVectorHint
 ```
 
 The main addition is that a 'Token' line is specified which uses *R* code to dynamically generate tokens (values). Elsewhere in the YAML file, these tokens are surrounded by angle brackets (e.g., `<num1>`) and will be replaced by their values when the lesson is run. 
@@ -36,6 +37,8 @@ For example, the above segment generates a question of the form 'Create a vector
 Note that in the 'Token' line above, the vertical line (|) is necessary to indicate that the *R* code spans multiple lines. Each line must begin with a number of blank spaces, as tabs are not allowed in YAML files. Alternatively, the *R* code can be specified on a single line with statements separated by semi-colons. 
 
 A developer can also provide a 'NumTimes' value. When a lesson is run, the question will be repeated (using dynamically generated values) the specified number of times (if not specified, 'NumTimes' defaults to 1).
+
+The HintFunction specifies the name of a function that can be used to provide tailored hints based on the student's answer. See the lesson.yaml and accompanying initLesson.R files for an example. 
 
 An example lesson.yaml file is provided in the  'Template_Based_Practice_Problems' directory.
 

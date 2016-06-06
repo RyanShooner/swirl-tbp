@@ -12,7 +12,6 @@ source("resume.R")
 source("tokens.R")
 source("testResponse.R")
 source("instructionSet.R")
-source("hints.R")
 source("info.R")
 
 e=environment(getFromNamespace("parse_content.yaml", "swirl"))
