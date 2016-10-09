@@ -75,7 +75,7 @@ testResponse.default <- function(current.row, e){
     temp <- current.row[,"Hint"]
     if (!is.na(e$current.row$HintFunction)) {
     	 if (!is.na(temp)) {
-      	     swirl_out(temp, skip_after=TRUE)
+      	     swirl_out(temp, skip_after=FALSE)
     	 }  
          hf = get(e$current.row$HintFunction)
 	 temp <- hf()
