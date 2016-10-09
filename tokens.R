@@ -1,4 +1,6 @@
+##################################################################
 ## generates and assigns values to tokens for a given row
+##################################################################
 token.generate <- function(row, token.list){
   tokens = NULL 
   if(!is.na(row$Token)){                #If there's anything in the 'Token' row,
@@ -12,14 +14,15 @@ token.generate <- function(row, token.list){
 }
 
 
-# creates tokens from .token.str which is valid R code
-# and uses tokens in the .token.list if specified
-# returns a list of token values
+########################################################################
+# executes R code in .token.str and returns a list containing objects
+# in the .token.list as well as any new objects created in the function
+########################################################################
 tokens.create <- function(.token.str, .token.list) {
 
+  # add token.list objects to function namespace,
+  # since these may be used by .token.str
   if (!is.null(.token.list)) {
- 
-  #TO DO: create objects here
      .n = length(.token.list)
      for(.i in 1:.n) {
        .na = names(.token.list)[.i]
@@ -39,11 +42,11 @@ tokens.create <- function(.token.str, .token.list) {
   return(.vals)
 }
 
-##################################################################
+###################################################################
 # For given row, replace each token <T> with its value
-# Note: only some token types are valid (see code below), and 
+# Note: only some token types are valid here (see code below), and 
 #  vectors/matrix values are formatted to be comma-separated   
-##################################################################
+###################################################################
 tokens.replace <- function(row,tokens){
   replace<-function(s,t.name,t.val) {
 	if (is.na(s)) return(NA)
