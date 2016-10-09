@@ -73,7 +73,10 @@ testResponse.default <- function(current.row, e){
   
     # get hint, possibly using hint function 
     temp <- current.row[,"Hint"]
-    if (!is.na(e$current.row$HintFunction)) { 
+    if (!is.na(e$current.row$HintFunction)) {
+    	 if (!is.na(temp)) {
+      	     swirl_out(temp, skip_after=!is_mult)
+    	 }  
          hf = get(e$current.row$HintFunction)
 	 temp <- hf()
     }
